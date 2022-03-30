@@ -36,10 +36,7 @@ TARGET_BOOTANIMATION_HALF_RES := true
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
-    $(COMMON_PATH) \
-#    hardware/google/interfaces \
-#    hardware/google/pixel \
-	hardware/samsung/aidl/power-libperfmgr
+    $(COMMON_PATH)
 
 # Audio
 PRODUCT_PACKAGES += \
