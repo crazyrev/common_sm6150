@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-COMMON_PATH := device/samsung/m51
+COMMON_PATH := device/samsung/sm6150
 
 # Inherit proprietary blobs
 $(call inherit-product, vendor/samsung/sm6150/sm6150-vendor.mk)
@@ -37,8 +37,8 @@ TARGET_BOOTANIMATION_HALF_RES := true
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(COMMON_PATH) \
-    hardware/google/interfaces \
-    hardware/google/pixel \
+#    hardware/google/interfaces \
+#    hardware/google/pixel \
 	hardware/samsung/aidl/power-libperfmgr
 
 # Audio
