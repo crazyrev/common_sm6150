@@ -19,6 +19,8 @@ COMMON_PATH := device/samsung/sm6150
 # Inherit proprietary blobs
 $(call inherit-product, vendor/samsung/sm6150/sm6150-vendor.mk)
 
+# Overlays
+PRODUCT_ENFORCE_RRO_TARGETS := *
 DEVICE_PACKAGE_OVERLAYS += $(COMMON_PATH)/overlay
 
 # Vendor properties
@@ -31,12 +33,14 @@ TARGET_SCREEN_HEIGHT := 2400
 PRODUCT_AAPT_CONFIG := normal
 PRODUCT_AAPT_PREF_CONFIG := xxhdpi
 
-# Boot animation
-TARGET_BOOTANIMATION_HALF_RES := true
+# Doze
+PRODUCT_PACKAGES += \
+    SamsungDoze
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
-    $(COMMON_PATH)
+    $(COMMON_PATH) \
+    hardware/samsung/aidl/power-libperfmgr
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -47,7 +51,7 @@ PRODUCT_PACKAGES += \
     audio.r_submix.default \
     audio.usb.default \
     libaudioalsa \
-	android.hardware.soundtrigger@2.2-impl \
+    android.hardware.soundtrigger@2.2-impl \
     libtinycompress \
     libqcomvisualizer \
     libqcomvoiceprocessing \
@@ -260,6 +264,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     vndservicemanager
 
+# Sensors
+PRODUCT_PACKAGES += \
+    android.hardware.sensors@2.1-service.samsung-multihal \
+    android.hardware.sensors@2.0-ScopedWakelock.vendor
+
 # USB
 PRODUCT_PACKAGES += \
     android.hardware.usb@1.2-service-qti
@@ -290,7 +299,7 @@ PRODUCT_COPY_FILES += \
     $(COMMON_PATH)/configs/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/WCNSS_qcom_cfg.ini \
     $(COMMON_PATH)/configs/wifi/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
     $(COMMON_PATH)/configs/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
-	$(COMMON_PATH)/configs/wifi/wpa_supplicant.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant.conf
+    $(COMMON_PATH)/configs/wifi/wpa_supplicant.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant.conf
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.wifi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.xml \
@@ -348,6 +357,37 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/com.nxp.mifare.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/com.nxp.mifare.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml
 
+# Init files and fstab
+PRODUCT_PACKAGES += \
+    fstab.default \
+    fstab.default.ramdisk \
+    fstab.ramplus \
+    init.qcom.rc \
+    init.qcom.usb.rc \
+    init.samsung.bsp.rc \
+    init.samsung.display.rc \
+    init.samsung.rc \
+    init.fingerprint.rc \
+    init.ramplus.rc \
+    init.target.rc \
+    ueventd.qcom.rc \
+    wifi_qcom.rc \
+    wifi_sec.rc \
+    init.audio.samsung.rc \
+    init.nfc.samsung.rc \
+    init.vendor.onebinary.rc \
+    init.vendor.rilchip.rc \
+    init.vendor.rilcommon.rc \
+    init.vendor.sensors.rc \
+    init.vendor.sysfw.rc
+
+# Vendor scripts
+PRODUCT_PACKAGES += \
+    init.class_main.sh \
+    init.qcom.post_boot.sh \
+    init.qcom.sh \
+    init.qti.chg_policy.sh
+
 # Keymaster
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.0-service.samsung \
@@ -356,15 +396,13 @@ PRODUCT_PACKAGES += \
 # FastCharge
 PRODUCT_PACKAGES += vendor.lineage.fastcharge@1.0-service.samsung
 
-# Powershare
-PRODUCT_PACKAGES += vendor.lineage.powershare@1.0-service.samsung
-
-# Required
+# Vibrator
 PRODUCT_PACKAGES += \
-    android.hardware.radio@1.3-radio-service.samsung \
-    android.hardware.sensors@2.1-service.samsung-multihal \
-	android.hardware.thermal@2.0-service.samsung \
-	android.hardware.vibrator-service.samsung \
-	android.hardware.usb@1.3-service.samsung \
-	android.hardware.light-service.samsung \
-	android.hardware.power-service.samsung-libperfmgr
+    android.hardware.vibrator-service.m51
+
+# VNDK
+PRODUCT_COPY_FILES += \
+    prebuilts/vndk/v30/arm64/arch-arm64-armv8-a/shared/vndk-sp/libutils.so:$(TARGET_COPY_OUT_VENDOR)/lib64/libutils-v30.so
+
+# Vndk Version
+PRODUCT_TARGET_VNDK_VERSION := 30
